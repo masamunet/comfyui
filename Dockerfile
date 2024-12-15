@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
+# FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
@@ -34,9 +35,17 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 WORKDIR /workspace/ComfyUI
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY run-comfyui.ipynb /workspace/
+WORKDIR /workspace/ComfyUI/custom_nodes
+RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
+  && git clone https://github.com/11cafe/comfyui-workspace-manager.git \
+  && cd /workspace/ComfyUI/custom_nodes/ComfyUI-Manager \
+  && pip3 install -r requirements.txt \
+  && cd /workspace/ComfyUI/custom_nodes/comfyui-workspace-manager \
+  && pip3 install -r requirements.txt
 
 WORKDIR /workspace
+
+COPY run-comfyui.ipynb /workspace/
 
 ENTRYPOINT []
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--no-browser", "--ServerApp.allow_origin=*", "--ServerApp.allow_remote_access=True", "--notebook-dir=/workspace"]
