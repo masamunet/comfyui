@@ -36,5 +36,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY run-comfyui.ipynb /workspace/
 
+WORKDIR /workspace
+
 ENTRYPOINT []
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--no-browser"]
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--no-browser", "--ServerApp.allow_origin=*", "--ServerApp.allow_remote_access=True", "--notebook-dir=/workspace"]
