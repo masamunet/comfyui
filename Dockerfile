@@ -12,11 +12,9 @@ RUN apt-get update && apt-get install -y \
   libeigen3-dev \
   python3-pip \
   && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean
-
-RUN pip3 install --upgrade pip
-
-RUN pip3 install --no-cache-dir \
+  && apt-get clean \
+  && pip3 install --upgrade pip \
+  && pip3 install --no-cache-dir \
   torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
   numpy \
   jupyter \
@@ -24,10 +22,10 @@ RUN pip3 install --no-cache-dir \
   "notebook<7.0.0" \
   jupyter_contrib_nbextensions \
   jupyter_nbextensions_configurator \
-  ipywidgets
-
-RUN jupyter contrib nbextension install --system && \
-  jupyter nbextension enable --system widgetsnbextension
+  ipywidgets \
+  && rm -rf /root/.cache/pip \
+  && jupyter contrib nbextension install --system \
+  && jupyter nbextension enable --system widgetsnbextension
 
 COPY runpod.yaml README.md /
 
