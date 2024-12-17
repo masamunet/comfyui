@@ -28,24 +28,26 @@ RUN apt-get update && apt-get install -y \
   && jupyter contrib nbextension install --system \
   && jupyter nbextension enable --system widgetsnbextension
 
-COPY runpod.yaml README.md /
+COPY runpod.yaml README.md entrypoint.sh /
 
-WORKDIR /workspace
+WORKDIR /workspace_tmp
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
-WORKDIR /workspace/ComfyUI
+WORKDIR /workspace_tmp/ComfyUI
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-WORKDIR /workspace/ComfyUI/custom_nodes
+WORKDIR /workspace_tmp/ComfyUI/custom_nodes
 RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
   && git clone https://github.com/11cafe/comfyui-workspace-manager.git \
-  && cd /workspace/ComfyUI/custom_nodes/ComfyUI-Manager \
+  && cd /workspace_tmp/ComfyUI/custom_nodes/ComfyUI-Manager \
   && pip3 install -r requirements.txt \
-  && cd /workspace/ComfyUI/custom_nodes/comfyui-workspace-manager \
+  && cd /workspace_tmp/ComfyUI/custom_nodes/comfyui-workspace-manager \
   && pip3 install -r requirements.txt
+
+COPY run-comfyui.ipynb /workspace_tmp/
+RUN chmod 644 /workspace_tmp/run-comfyui.ipynb &&\
+  chmod 755 /entrypoint.sh
 
 WORKDIR /workspace
 
-COPY run-comfyui.ipynb /workspace/
-
-ENTRYPOINT []
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--no-browser", "--ServerApp.allow_origin=*", "--ServerApp.allow_remote_access=True", "--notebook-dir=/workspace"]
