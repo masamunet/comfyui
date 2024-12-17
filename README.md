@@ -31,5 +31,6 @@ runpod.io上でJupyterLab統合のComfyUIを実行するためのDockerイメー
 ## 使用方法
 
 1. runpod.io上で本イメージを使用して新しいポッドを作成
-2. ポート8188でComfyUIに接続
-3. ポート8888でJupyterLabに接続（パスワード不要）
+2. ポート8888でJupyterLabに接続（パスワード不要）
+3. run-comfyui.ipynbをJupyterLab上で開いて実行。そうするとComfyUIが起動する。
+4. ポート8188でComfyUIに接続
