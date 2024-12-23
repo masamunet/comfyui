@@ -27,6 +27,7 @@ runpod.io上でJupyterLab統合のComfyUIを実行するためのDockerイメー
 - JupyterLabをポート8888で実行 
 - CUDA 12.4対応
 - PyTorch（CUDA対応）プリインストール済み
+- ComfyUI-Managerとcomfyui-workspace-managerをインストール済み
 
 ## 使用方法
 
