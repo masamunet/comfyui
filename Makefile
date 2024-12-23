@@ -1,4 +1,4 @@
-DOCKER_USERNAME ?= masamunet
+DOCKER_USERNAME ?= $(shell grep DOCKER_USERNAME .env | cut -d '=' -f2 | tr -d ' ')
 IMAGE_NAME = runpod-comfyui
 TAG ?= latest
 
@@ -23,5 +23,6 @@ build:
 push:
 	docker push $(DOCKER_USERNAME)/$(IMAGE_NAME):$(TAG)
 
-build-and-push:
+build-and-push: bp
+bp:
 	docker buildx build --platform linux/amd64 --push -t $(DOCKER_USERNAME)/$(IMAGE_NAME):$(TAG) .
