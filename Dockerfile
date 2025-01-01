@@ -43,6 +43,12 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
   && cd /workspace_tmp/ComfyUI/custom_nodes/comfyui-workspace-manager \
   && pip3 install -r requirements.txt
 
+COPY install-extentions.sh /
+RUN chmod +x /install-extentions.sh &&\
+  /install-extentions.sh && \ek
+rm -rf /install-extentions.sh
+
+
 COPY run-comfyui.ipynb /workspace_tmp/
 RUN chmod 644 /workspace_tmp/run-comfyui.ipynb &&\
   chmod 755 /entrypoint.sh
