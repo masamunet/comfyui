@@ -45,8 +45,8 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
 
 COPY install-extentions.sh /
 RUN chmod +x /install-extentions.sh &&\
-  /install-extentions.sh && \ek
-rm -rf /install-extentions.sh
+  /install-extentions.sh &&\
+  rm -rf /install-extentions.sh
 
 
 COPY run-comfyui.ipynb /workspace_tmp/
