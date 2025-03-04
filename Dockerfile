@@ -1,5 +1,5 @@
-FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
-# FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+# FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
@@ -16,11 +16,13 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean \
   && pip3 install --upgrade pip \
   && pip3 install --no-cache-dir \
-  torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
+  torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 \
+  # torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
   numpy \
   jupyter \
   jupyterlab \
   "notebook<7.0.0" \
+  # notebook \
   jupyter_contrib_nbextensions \
   jupyter_nbextensions_configurator \
   ipywidgets \
@@ -28,30 +30,23 @@ RUN apt-get update && apt-get install -y \
   && jupyter contrib nbextension install --system \
   && jupyter nbextension enable --system widgetsnbextension
 
-COPY runpod.yaml README.md entrypoint.sh /
+COPY runpod.yaml README.md entrypoint.sh install-extentions.sh /
+COPY run-comfyui.ipynb /workspace_tmp/
 
 WORKDIR /workspace_tmp
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git
-WORKDIR /workspace_tmp/ComfyUI
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-WORKDIR /workspace_tmp/ComfyUI/custom_nodes
-RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
-  && git clone https://github.com/11cafe/comfyui-workspace-manager.git \
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git \
+  && cd /workspace_tmp/ComfyUI \
+  && pip3 install --no-cache-dir -r requirements.txt \
+  && cd /workspace_tmp/ComfyUI/custom_nodes \
+  && git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
   && cd /workspace_tmp/ComfyUI/custom_nodes/ComfyUI-Manager \
   && pip3 install -r requirements.txt \
-  && cd /workspace_tmp/ComfyUI/custom_nodes/comfyui-workspace-manager \
-  && pip3 install -r requirements.txt
+  && cd / \
+  && chmod +x /*.sh \
+  && /install-extentions.sh \
+  && chmod 644 /workspace_tmp/run-comfyui.ipynb \
+  && rm -rf /install-extentions.sh
 
-COPY install-extentions.sh /
-RUN chmod +x /install-extentions.sh &&\
-  /install-extentions.sh &&\
-  rm -rf /install-extentions.sh
-
-
-COPY run-comfyui.ipynb /workspace_tmp/
-RUN chmod 644 /workspace_tmp/run-comfyui.ipynb &&\
-  chmod 755 /entrypoint.sh
 
 WORKDIR /workspace
 

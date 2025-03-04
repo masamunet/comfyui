@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p /workspace_tmp/ComfyUI/web/extensions
 # ディレクトリを移動
 cd /workspace_tmp/ComfyUI/custom_nodes/
 
