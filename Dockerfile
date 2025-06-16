@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
   && jupyter contrib nbextension install --system \
   && jupyter nbextension enable --system widgetsnbextension
 
-COPY runpod.yaml README.md entrypoint.sh install-extentions.sh /
+COPY runpod.yaml README.md entrypoint.sh install-extensions.sh /
 COPY run-comfyui.ipynb /workspace_tmp/
 
 WORKDIR /workspace_tmp
@@ -48,11 +48,11 @@ RUN set -euo pipefail \
   && cd / \
   && chmod +x /*.sh \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Running extensions installation..." \
-  && /install-extentions.sh \
+  && /install-extensions.sh \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up notebook permissions..." \
   && chmod 644 /workspace_tmp/run-comfyui.ipynb \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cleaning up installation script..." \
-  && rm -rf /install-extentions.sh \
+  && rm -rf /install-extensions.sh \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] ComfyUI setup completed successfully"
 
 
