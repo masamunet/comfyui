@@ -34,18 +34,28 @@ COPY runpod.yaml README.md entrypoint.sh install-extentions.sh /
 COPY run-comfyui.ipynb /workspace_tmp/
 
 WORKDIR /workspace_tmp
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git \
+RUN set -euo pipefail \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cloning ComfyUI repository..." \
+  && git clone https://github.com/comfyanonymous/ComfyUI.git \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing ComfyUI requirements..." \
   && cd /workspace_tmp/ComfyUI \
   && pip3 install --no-cache-dir -r requirements.txt \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cloning ComfyUI-Manager..." \
   && cd /workspace_tmp/ComfyUI/custom_nodes \
   && git clone https://github.com/ltdrdata/ComfyUI-Manager.git \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing ComfyUI-Manager requirements..." \
   && cd /workspace_tmp/ComfyUI/custom_nodes/ComfyUI-Manager \
   && pip3 install -r requirements.txt \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up script permissions..." \
   && cd / \
   && chmod +x /*.sh \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Running extensions installation..." \
   && /install-extentions.sh \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up notebook permissions..." \
   && chmod 644 /workspace_tmp/run-comfyui.ipynb \
-  && rm -rf /install-extentions.sh
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cleaning up installation script..." \
+  && rm -rf /install-extentions.sh \
+  && echo "[$(date '+%Y-%m-%d %H:%M:%S')] ComfyUI setup completed successfully"
 
 
 WORKDIR /workspace
