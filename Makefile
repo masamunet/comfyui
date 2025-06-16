@@ -64,8 +64,9 @@ push: check-env
 	docker push $(DOCKER_USERNAME)/$(IMAGE_NAME):$(TAG)
 	@echo "✓ Push completed successfully"
 
-build-and-push: bp
-bp: check-env
+build-and-push: check-env
 	@echo "Building and pushing Docker image: $(DOCKER_USERNAME)/$(IMAGE_NAME):$(TAG)"
 	docker buildx build --platform linux/amd64 --push -t $(DOCKER_USERNAME)/$(IMAGE_NAME):$(TAG) .
 	@echo "✓ Build and push completed successfully"
+
+bp: build-and-push
