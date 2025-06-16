@@ -32,7 +32,7 @@ COPY runpod.yaml README.md entrypoint.sh install-extensions.sh /
 COPY run-comfyui.ipynb /workspace_tmp/
 
 WORKDIR /workspace_tmp
-RUN set -euo pipefail \
+RUN set -eu \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cloning ComfyUI repository..." \
   && git clone https://github.com/comfyanonymous/ComfyUI.git \
   && echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing ComfyUI requirements..." \
