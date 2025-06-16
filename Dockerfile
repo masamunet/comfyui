@@ -1,5 +1,4 @@
-FROM nvidia/cuda:12.9.0-devel-ubuntu22.04
-# FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
+FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
@@ -16,8 +15,7 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean \
   && pip3 install --upgrade pip \
   && pip3 install --no-cache-dir \
-  torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 \
-  # torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
+  torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
   numpy \
   jupyter \
   jupyterlab \
