@@ -32,6 +32,25 @@ else
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] /workspace_tmp not found, skipping file copy"
 fi
 
+cd /
+git clone https://github.com/Hearmeman24/CivitAI_Downloader.git
+cd CivitAI_Downloader
+
+# Check if CIVITAI_API_KEY is set
+if [ ! -z "$CIVITAI_API_KEY" ]; then
+    # Check if CIVITAI_LORA_IDS is set
+    if [ ! -z "$CIVITAI_LORA_IDS" ]; then
+        # Create loras directory if it doesn't exist
+        mkdir -p /workspace/ComfyUI/models/loras
+        
+        # Split CIVITAI_LORA_IDS by comma and iterate
+        IFS=',' read -ra LORA_IDS <<< "$CIVITAI_LORA_IDS"
+        for lora_id in "${LORA_IDS[@]}"; do
+            python3 download.py -t "$CIVITAI_API_KEY" -m "$lora_id" -o /workspace/ComfyUI/models/loras > /dev/null 2>&1
+        done
+    fi
+fi
+
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Entrypoint script completed successfully"
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Executing command: $*"
 
