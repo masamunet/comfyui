@@ -1,26 +1,33 @@
-FROM nvidia/cuda:12.9.1-devel-ubuntu22.04
+# FROM nvidia/cuda:12.9.1-devel-ubuntu22.04
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+# FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
-
-RUN apt-get update && apt-get install -y \
+RUN apt-get clean \
+  && apt-get autoclean \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get update --allow-unauthenticated --allow-insecure-repositories \
+  && apt-get install -y --allow-unauthenticated --no-install-recommends \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release \
   build-essential \
   cmake \
   git \
-  libopenblas-dev \
-  liblapack-dev \
-  libeigen3-dev \
   python3-pip \
-  && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
   && pip3 install --upgrade pip \
   && pip3 install --no-cache-dir \
   torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124 \
+  && rm -rf /root/.cache/pip \
+  && pip3 install --no-cache-dir \
   numpy \
   jupyter \
   jupyterlab \
   "notebook<7.0.0" \
-  # notebook \
   jupyter_contrib_nbextensions \
   jupyter_nbextensions_configurator \
   ipywidgets \
